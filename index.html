@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loveland</title>
+    <meta name="description" content="Loveland, Colorado, USA — January 2018">
+    <meta name="author" content="Heiswayi Nrird">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="header">
+        <h1>Loveland</h1>
+        <h2>Loveland, Colorado, USA — January 2018</h2>
+    </div>
+    <div class="gallery" id="gallery"></div>
+    <div class="modal" id="modal" onclick="closeModal()">
+        <img id="modal-img" src="" alt="" onclick="event.stopPropagation()">
+    </div>
+    <div class="footer">
+        <p>© Captured with <span style="color: red;">&hearts;</span> by <a href="https://nrird.com">Heiswayi Nrird</a>. All rights reserved.</p>
+    </div>
+
+    <script>
+        const images = [
+            { src: "photos/1.jpg" },
+            { src: "photos/10.jpg" },
+            { src: "photos/11.jpg" },
+            { src: "photos/12.jpg" },
+            { src: "photos/13.jpg" },
+            { src: "photos/14.jpg" },
+            { src: "photos/15.jpg" },
+            { src: "photos/16.jpg" },
+            { src: "photos/17.jpg" },
+            { src: "photos/18.jpg" },
+            { src: "photos/19.jpg" },
+            { src: "photos/2.jpg" },
+            { src: "photos/20.jpg" },
+            { src: "photos/21.jpg" },
+            { src: "photos/22.jpg" },
+            { src: "photos/23.jpg" },
+            { src: "photos/24.jpg" },
+            { src: "photos/25.jpg" },
+            { src: "photos/26.jpg" },
+            { src: "photos/27.jpg" },
+            { src: "photos/28.jpg" },
+            { src: "photos/29.jpg" },
+            { src: "photos/3.jpg" },
+            { src: "photos/30.jpg" },
+            { src: "photos/31.jpg" },
+            { src: "photos/32.jpg" },
+            { src: "photos/33.jpg" },
+            { src: "photos/34.jpg" },
+            { src: "photos/35.jpg" },
+            { src: "photos/36.jpg" },
+            { src: "photos/37.jpg" },
+            { src: "photos/38.jpg" },
+            { src: "photos/39.jpg" },
+            { src: "photos/4.jpg" },
+            { src: "photos/40.jpg" },
+            { src: "photos/41.jpg" },
+            { src: "photos/42.jpg" },
+            { src: "photos/43.jpg" },
+            { src: "photos/44.jpg" },
+            { src: "photos/45.jpg" },
+            { src: "photos/5.jpg" },
+            { src: "photos/6.jpg" },
+            { src: "photos/7.jpg" },
+            { src: "photos/8.jpg" },
+            { src: "photos/9.jpg" },
+        ];
+
+        const gallery = document.getElementById('gallery');
+        images.forEach(image => {
+            const div = document.createElement('div');
+            div.className = 'gallery-item';
+            div.innerHTML = `<img src="${image.src}" onclick="openModal('${image.src}')">`;
+            gallery.appendChild(div);
+        });
+
+        function openModal(src) {
+            const modal = document.getElementById('modal');
+            const modalImg = document.getElementById('modal-img');
+            modal.classList.add('active');
+            modalImg.src = src;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('active');
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+
+</html>
