@@ -73,27 +73,81 @@
         ];
 
         const gallery = document.getElementById('gallery');
-        images.forEach(image => {
+        let currentImageIndex = 0;
+
+        // Create gallery items with lazy loading
+        images.forEach((image, index) => {
             const div = document.createElement('div');
             div.className = 'gallery-item';
-            div.innerHTML = `<img src="${image.src}" onclick="openModal('${image.src}')">`;
+            // Use data-src for lazy loading instead of src
+            div.innerHTML = `<img data-src="${image.src}" class="lazy" alt="Photo ${index + 1}" onclick="openModal(${index})">`;
             gallery.appendChild(div);
         });
 
-        function openModal(src) {
+        // Intersection Observer for lazy loading with fade effect
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    const src = img.getAttribute('data-src');
+
+                    // Preload the image
+                    const tempImg = new Image();
+                    tempImg.onload = () => {
+                        img.src = src;
+                        img.classList.add('loaded');
+                        img.removeAttribute('data-src');
+                    };
+                    tempImg.src = src;
+
+                    observer.unobserve(img);
+                }
+            });
+        }, {
+            rootMargin: '50px' // Start loading 50px before image enters viewport
+        });
+
+        // Observe all lazy images
+        document.querySelectorAll('img.lazy').forEach(img => {
+            imageObserver.observe(img);
+        });
+
+        function openModal(index) {
+            currentImageIndex = index;
             const modal = document.getElementById('modal');
             const modalImg = document.getElementById('modal-img');
             modal.classList.add('active');
-            modalImg.src = src;
+            modalImg.src = images[index].src;
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
         }
 
         function closeModal() {
             const modal = document.getElementById('modal');
             modal.classList.remove('active');
+            document.body.style.overflow = ''; // Restore scrolling
         }
 
+        function navigateImage(direction) {
+            currentImageIndex += direction;
+            if (currentImageIndex < 0) currentImageIndex = images.length - 1;
+            if (currentImageIndex >= images.length) currentImageIndex = 0;
+
+            const modalImg = document.getElementById('modal-img');
+            modalImg.style.opacity = '0';
+
+            setTimeout(() => {
+                modalImg.src = images[currentImageIndex].src;
+                modalImg.style.opacity = '1';
+            }, 150);
+        }
+
+        // Keyboard navigation
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') closeModal();
+            if (document.getElementById('modal').classList.contains('active')) {
+                if (e.key === 'ArrowLeft') navigateImage(-1);
+                if (e.key === 'ArrowRight') navigateImage(1);
+            }
         });
     </script>
 </body>
